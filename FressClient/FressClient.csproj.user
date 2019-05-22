@@ -4,4 +4,14 @@
     <_LastSelectedProfileId>C:\Users\Graphics Lab\Documents\Tyler\FressClient\FressClient\Properties\PublishProfiles\SelfContained.pubxml</_LastSelectedProfileId>
     <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>fress.alien-head.org 3270</StartArguments>
+    <ExternalConsole>true</ExternalConsole>
+    <ConsolePause>false</ConsolePause>
+    <EnvironmentVariables>
+      <Variable name="DYLD_PRINT_LIBRARIES" value="true" xmlns="" />
+      <Variable name="DYLD_PRINT_RPATHS" value="true" xmlns="" />
+    </EnvironmentVariables>
+  </PropertyGroup>
 </Project>
