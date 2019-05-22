@@ -2,37 +2,41 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>latest</LangVersion>
     <ApplicationIcon />
     <StartupObject />
+    <PackOnBuild>true</PackOnBuild>
+    <PackageVersion>1.0</PackageVersion>
+    <Authors>Tyler Schicke</Authors>
+    <PackageId>FressClient</PackageId>
+    <Description>Emulator for the Imlac display terminal application that communicated with the Brown
+FRESS hypertext system.</Description>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_2</DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP;NETCOREAPP2_2</DefineConstants>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <NoStdLib>false</NoStdLib>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="sfml-graphics">
-      <HintPath>..\..\..\..\Downloads\SFML.Net-2.4\SFML.Net-2.4\src\Graphics\bin\Debug\netstandard2.0\sfml-graphics.dll</HintPath>
-    </Reference>
-    <Reference Include="sfml-system">
-      <HintPath>..\..\..\..\Downloads\SFML.Net-2.4\SFML.Net-2.4\src\Graphics\bin\Debug\netstandard2.0\sfml-system.dll</HintPath>
-    </Reference>
-    <Reference Include="sfml-window">
-      <HintPath>..\..\..\..\Downloads\SFML.Net-2.4\SFML.Net-2.4\src\Graphics\bin\Debug\netstandard2.0\sfml-window.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="csfml-graphics-2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="csfml-system-2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="csfml-window-2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="resources\Inconsolata-Regular.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="sfmlnet-audio" Version="2.4.0" />
+    <PackageReference Include="sfmlnet-graphics" Version="2.4.0" />
+    <PackageReference Include="sfmlnet-system" Version="2.4.0" />
+    <PackageReference Include="sfmlnet-window" Version="2.4.0" />
+    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
+  </ItemGroup>
 </Project>
