@@ -1,5 +1,22 @@
-;; This buffer is for text that is not saved, and for Lisp evaluation.
-;; To create a file, visit it with <open> and enter text in its buffer.
+To run this, You need to have built it. On Windows, pretty easy. On Mac
+you need to have installed some native libraries.
 
+This was a pain, but currently I have it running with 2.4.2_1 of
+libsfml. I don't think I had to build them by hand, so perhaps this will
+work:
+
+brew install sfml --version 2.4.2_1 
+dotnet build
+./run.sh hostname port
+e.g. 
+./run.sh 52.203.10.15 3270
+
+You can just close the app, it disconnects, but
+won't logout unless you want to. It's easier if you don't. If fress
+is already running just issue a set window command to refresh the
+terminal:
+sw 3a
+
+Things you can do In CMS
 ls b // List all files
 ls b (o fress // list all fress files
