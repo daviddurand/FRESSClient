@@ -250,8 +250,8 @@ namespace FressClient
         }
 
         private Regex _windowCommand = new Regex(@"^\\(?<winNum>\d)(?<curWinNum>\d)(?<flag1>2)(?<flag2>\d)(?<op1>\d)(?<op2>\d)", RegexOptions.Singleline);
-        private Regex _commandWithTextRegex = new Regex(@"^\\(?<winNum>\d)(?<curWinNum>\d)(?<flag1>\d)(?<flag2>\d)(?>\t(?<line>[^\r]*\r\n))*\t¦", RegexOptions.Singleline);
-        private Regex _specialCommandRegex = new Regex(@"^\\(?<winNum>\d)(?<curWinNum>\d)(?<flag1>4)(?<flag2>\d)\t(?<data>.*?)\r\n\t»",  RegexOptions.Singleline);
+        private Regex _commandWithTextRegex = new Regex(@"^\\(?<winNum>\d)(?<curWinNum>\d)(?<flag1>\d)(?<flag2>\d)(?>\t(?<line>[^\r¦]*\r\n))*\t¦", RegexOptions.Singleline);
+        private Regex _specialCommandRegex = new Regex(@"^\\(?<winNum>\d)(?<curWinNum>\d)(?<flag1>4)(?<flag2>\d)\t(?<data>[^¦]*?)\r\n\t»",  RegexOptions.Singleline);
         private Regex _residueRegex = new Regex(@"^(?<junk>[^\\]+)(?<data>\\.*)?$", RegexOptions.Singleline);
         private Regex _badcommand = new Regex(@"^(?<junk>\\[^\\]+)(?<data>\\.*)$", RegexOptions.Singleline);
         private string _responseBuffer = "";
