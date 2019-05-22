@@ -222,7 +222,7 @@ namespace FressClient
             foreach ((string subStr, Text.Styles subStyle, int hiddenStart, int hiddenTotal) in splits)
             {
                 _drawableText.DisplayedString = subStr;
-                _drawableText.CharacterSize = style == Text.Styles.Bold ? Program.FontSize - 2 : Program.FontSize;
+                _drawableText.CharacterSize = style == Text.Styles.Bold ? Program.FontSize : Program.FontSize;
                 _drawableText.Position = position;
                 _drawableText.Style = subStyle;
                 if (_cursorIndex >= count && _cursorIndex <= count + subStr.Length)
@@ -304,7 +304,7 @@ namespace FressClient
         {
             _cursorIndex = BufferText.Length;
         }
-
+         
         public void Append(string s)
         {
             BufferText += s.Replace("\r", "");
