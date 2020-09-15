@@ -75,7 +75,7 @@ namespace FressClient
         {
             states.Transform.Combine(Transform);
             FloatRect size = _drawableText.Font.GetGlyph('a', _drawableText.CharacterSize, false, 0).Bounds;
-            float height = _drawableText.Font.GetLineSpacing(_drawableText.CharacterSize);
+            float height = Program.CharHeight;
             _cursor.Size = new Vector2f(size.Width, height - 1);
             _drawableText.DisplayedString = "";
 
@@ -93,14 +93,14 @@ namespace FressClient
                 }
                 string drawable = line;
                 Vector2f? pos;
-                while (drawable.Length > CharacterSize.X)
-                {
-                    string l = drawable.Substring(0, CharacterSize.X);
-                    drawable = drawable.Substring(CharacterSize.X);
-                    (pos, style, charsDrawn) = DrawString(l, target, states, style, currentPosition, charsDrawn);
-                    cursorPos = cursorPos ?? pos;
-                    currentPosition.Y += height;
-                }
+                // while (drawable.Length > CharacterSize.X)
+                // {
+                    // string l = drawable.Substring(0, CharacterSize.X);
+                    // drawable = drawable.Substring(CharacterSize.X);
+                    // (pos, style, charsDrawn) = DrawString(l, target, states, style, currentPosition, charsDrawn);
+                    // cursorPos = cursorPos ?? pos;
+                    // currentPosition.Y += height;
+                // }
 
                 (pos, style, charsDrawn) = DrawString(drawable, target, states, style, currentPosition, charsDrawn);
                 cursorPos = cursorPos ?? pos;
@@ -303,6 +303,11 @@ namespace FressClient
         public void GoToEnd()
         {
             _cursorIndex = BufferText.Length;
+        }
+         
+        public void GoToStart()
+        {
+            _cursorIndex = 0;
         }
          
         public void Append(string s)

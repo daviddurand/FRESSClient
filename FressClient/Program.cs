@@ -48,8 +48,8 @@ namespace FressClient
         }
 
         public static Font Font;
-        public static readonly uint FontSize = 40;
-        public static readonly uint MenuFontSize = 30;
+        public static readonly uint FontSize = 28;
+        public static readonly uint MenuFontSize = 20;
 
         public Buffer CommandBuffer, ErrorBuffer;
         public Buffer[] Buffers;
@@ -79,6 +79,10 @@ namespace FressClient
             TxWindowDimensions = 0x2,
             TxSpecialMessage = 0x4,
             TxBinaryData = 0x8,
+        }
+        public class Win {
+           public static readonly int Lines = 36;
+           public static readonly int Chars = 120;
         }
 
         [Flags]
@@ -168,34 +172,34 @@ namespace FressClient
             switch (config)
             {
                 case WindowConfig.Config_1A:
-                    Buffers = new[] { new Buffer(new Vector2i(130, 40)) };
+                    Buffers = new[] { new Buffer(new Vector2i(Win.Chars, Win.Lines)) };
                     break;
                 case WindowConfig.Config_2A:
-                    Buffers = new[] { new Buffer(new Vector2i(130, 20)), new Buffer(new Vector2i(130, 20)) { Position = new Vector2f(0, CharHeight * 20) } };
+                    Buffers = new[] { new Buffer(new Vector2i(Win.Chars, Win.Lines/2)), new Buffer(new Vector2i(Win.Chars, Win.Lines/2)) { Position = new Vector2f(0, CharHeight * Win.Lines/2) } };
                     break;
                 case WindowConfig.Config_2B:
-                    Buffers = new[] { new Buffer(new Vector2i(65, 40)), new Buffer(new Vector2i(65, 40)) { Position = new Vector2f(CharWidth * 65, 0) } };
+                    Buffers = new[] { new Buffer(new Vector2i(Win.Chars/2, Win.Lines)), new Buffer(new Vector2i(Win.Chars/2, Win.Lines)) { Position = new Vector2f(CharWidth * Win.Chars/2, 0) } };
                     break;
                 case WindowConfig.Config_3B:
                     Buffers = new[]{
-                        new Buffer(new Vector2i(65, 40)),
-                        new Buffer(new Vector2i(65, 20)){Position = new Vector2f(CharWidth * 65, 0)},
-                        new Buffer(new Vector2i(65, 20)){Position = new Vector2f(CharWidth * 65, CharHeight * 20)}
+                        new Buffer(new Vector2i(Win.Chars/2, Win.Lines)),
+                        new Buffer(new Vector2i(Win.Chars/2, Win.Lines/2)){Position = new Vector2f(CharWidth * Win.Chars/2, 0)},
+                        new Buffer(new Vector2i(Win.Chars/2, Win.Lines/2)){Position = new Vector2f(CharWidth * Win.Chars/2, CharHeight * Win.Lines/2)}
                     };
                     break;
                 case WindowConfig.Config_3A:
                     Buffers = new[]{
-                        new Buffer(new Vector2i(130, 20)),
-                        new Buffer(new Vector2i(65, 20)){Position = new Vector2f(0, CharHeight * 20)},
-                        new Buffer(new Vector2i(65, 20)){Position = new Vector2f(CharWidth * 65, CharHeight * 20)}
+                        new Buffer(new Vector2i(Win.Chars, Win.Lines/2)),
+                        new Buffer(new Vector2i(Win.Chars/2, Win.Lines/2)){Position = new Vector2f(0, CharHeight * Win.Lines/2)},
+                        new Buffer(new Vector2i(Win.Chars/2, Win.Lines/2)){Position = new Vector2f(CharWidth * Win.Chars/2, CharHeight * Win.Lines/2)}
                     };
                     break;
                 case WindowConfig.Config_4A:
                     Buffers = new[]{
-                        new Buffer(new Vector2i(65, 20)),
-                        new Buffer(new Vector2i(65, 20)){Position = new Vector2f(CharWidth * 65, 0)},
-                        new Buffer(new Vector2i(65, 20)){Position = new Vector2f(0, CharHeight * 20)},
-                        new Buffer(new Vector2i(65, 20)){Position = new Vector2f(CharWidth * 65, CharHeight * 20)}
+                        new Buffer(new Vector2i(Win.Chars/2, Win.Lines/2)),
+                        new Buffer(new Vector2i(Win.Chars/2, Win.Lines/2)){Position = new Vector2f(CharWidth * Win.Chars/2, 0)},
+                        new Buffer(new Vector2i(Win.Chars/2, Win.Lines/2)){Position = new Vector2f(0, CharHeight * Win.Lines/2)},
+                        new Buffer(new Vector2i(Win.Chars/2, Win.Lines/2)){Position = new Vector2f(CharWidth * Win.Chars/2, CharHeight * Win.Lines/2)}
                     };
                     break;
                 default:
@@ -207,7 +211,7 @@ namespace FressClient
                 Buffer buffer = Buffers[index];
                 buffer.SetWindowNumber(index);
                 Vector2f bufferPosition = buffer.Position;
-                bufferPosition.Y += 2 * CharHeight;
+                bufferPosition.Y += (1 * CharHeight);
                 buffer.Position = bufferPosition;
                 int i = index;
                 buffer.TextClicked += (s, button) => BufferOnTextClicked(s, button, i);
@@ -313,7 +317,7 @@ namespace FressClient
                         windowConfig = windowConfigMatch.Captures[0].Value[0] - '0';
                     }
                     HandleCommand(window, currentWindow, flag1, flag2, windowConfig, null);
-                    _responseBuffer = _responseBuffer.Substring(commandMatch.Index + commandMatch.Length - 1); //Exclude extra matched \
+                    _responseBuffer = _responseBuffer.Substring(commandMatch.Index + commandMatch.Length); //Exclude extra matched \
                     return true;
                 }
 
@@ -540,11 +544,12 @@ namespace FressClient
 
             Font = new Font("resources/Inconsolata-Regular.ttf");
             CharWidth = Font.GetGlyph('a', FontSize, false, 0).Advance;
-            CharHeight = Font.GetLineSpacing(FontSize);
+            CharHeight = Font.GetLineSpacing(FontSize) - _scaling;
 
             _scaling = GetSystemScaling();
 
-            MainWindow = new RenderWindow(new VideoMode((uint)(CharWidth * 65 * 2 * _scaling), (uint)(CharHeight * 43 * _scaling)), "FRESS");
+            RenderWindow commandWindow = new RenderWindow(new VideoMode((uint) (1085 * _scaling), (uint) (205* _scaling)), "Commands");
+            MainWindow = new RenderWindow(new VideoMode((uint)(CharWidth * Win.Chars * _scaling), (uint)(CharHeight * Win.Lines*2+2 * _scaling)), "FRESS");
             RenderWindow window = MainWindow;
             window.KeyPressed += WindowOnKeyPressed;
             window.TextEntered += Window_TextEntered;
@@ -560,7 +565,6 @@ namespace FressClient
             view.Center = new Vector2f(view.Size.X / 2, view.Size.Y / 2);
             window.SetView(view);
 
-            RenderWindow commandWindow = new RenderWindow(new VideoMode((uint) (1085 * _scaling), (uint) (205* _scaling)), "Commands");
             commandWindow.Resized += WindowOnResized;
             commandWindow.MouseButtonPressed += CommandWindowOnMouseButtonReleased;
 
@@ -570,10 +574,10 @@ namespace FressClient
             commandWindow.SetView(view);
 
             commandWindow.Position = new Vector2i(0, 0);
-            window.Position = new Vector2i(200, (int)commandWindow.Size.Y + 40);
+            window.Position = new Vector2i(200, (int)commandWindow.Size.Y + Win.Lines);
 
-            CommandBuffer = new Buffer(new Vector2i(65, 1)) { Position = new Vector2f(0, CharHeight), DisplayCursor = true, DisableFormatting = true };
-            ErrorBuffer = new Buffer(new Vector2i(65, 1)) { Position = new Vector2f(CharWidth * 65, CharHeight) };
+            CommandBuffer = new Buffer(new Vector2i(Win.Chars/2, 1)) { Position = new Vector2f(0, 0), DisplayCursor = true, DisableFormatting = true };
+            ErrorBuffer = new Buffer(new Vector2i(Win.Chars/2, 1)) { Position = new Vector2f(CharWidth * Win.Chars/2, 0) };
             SetWindowConfig(WindowConfig.Config_1A);
             SetCurrentWindow(0);
 
@@ -602,8 +606,8 @@ namespace FressClient
                 {
                     commandWindow.Draw(rectangleShape);
                 }
-                window.Display();
                 commandWindow.Display();
+                window.Display();
                 HandleRemoteResponses();
                 System.Threading.Thread.Yield();
             }
@@ -698,6 +702,7 @@ namespace FressClient
         }
 
         private bool _shifted = false;
+        private bool _control = false;
         private void Window_MouseButtonReleased(object sender, MouseButtonEventArgs e)
         {
             for (int index = 0; index < Buffers.Length; index++)
@@ -719,9 +724,32 @@ namespace FressClient
                 }
             }
         }
+        private void WindowOnKeyReleased(object sender, KeyEventArgs keyEventArgs)
+        {
+        }
 
         private void WindowOnKeyPressed(object sender, KeyEventArgs keyEventArgs)
         {
+            _shifted = keyEventArgs.Shift; // IsKeyPressed(Keyboard.Key.LShift) || Keyboard.IsKeyPressed(Keyboard.Key.RShift);
+            _control = keyEventArgs.Control; //Keyboard.IsKeyPressed(Keyboard.Key.LControl) || Keyboard.IsKeyPressed(Keyboard.Key.RControl);
+           if (_control)
+           {
+              switch(keyEventArgs.Code) {
+                 case Keyboard.Key.A:
+                    CommandBuffer.GoToStart();
+                    break;
+                 case Keyboard.Key.E:
+                    CommandBuffer.GoToEnd();
+                    break;
+                 case Keyboard.Key.U:
+                    CommandBuffer.BufferText = "";
+                    break;
+                 default:
+                    break;
+              }
+           }
+           else
+           {
             switch (keyEventArgs.Code)
             {
                 case Keyboard.Key.Left:
@@ -742,7 +770,7 @@ namespace FressClient
                 default:
                     break;
             }
-            _shifted = Keyboard.IsKeyPressed(Keyboard.Key.LShift) || Keyboard.IsKeyPressed(Keyboard.Key.RShift);
+           }
         }
 
         private void Window_TextEntered(object sender, TextEventArgs e)
